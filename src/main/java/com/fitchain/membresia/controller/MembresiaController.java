@@ -51,11 +51,6 @@ public class MembresiaController {
         return ResponseEntity.ok(membresiaService.actualizar(id, requestDTO));
     }
 
-    @PatchMapping("/{id}/cancelar")
-    public ResponseEntity<MembresiaResponseDTO> cancelar(@PathVariable Long id) {
-        return ResponseEntity.ok(membresiaService.cancelar(id));
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
         membresiaService.eliminar(id);

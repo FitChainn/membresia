@@ -115,17 +115,6 @@ public class MembresiaService {
         return toResponseDTO(actualizada, cliente);
     }
 
-    public MembresiaResponseDTO cancelar(Long id) {
-        log.info("Cancelando membresía con id {}", id);
-        Membresia membresia = membresiaRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Membresía con id " + id + " no encontrada"));
-
-        membresia.setEstado(EstadoMembresia.CANCELADA);
-        Membresia cancelada = membresiaRepository.save(membresia);
-        log.info("Membresía {} cancelada", id);
-        return toResponseDTO(cancelada, clienteClient.obtenerClientePorId(cancelada.getClienteId()));
-    }
-
     public void eliminar(Long id) {
         log.info("Eliminando membresía con id {}", id);
         if (!membresiaRepository.existsById(id)) {
