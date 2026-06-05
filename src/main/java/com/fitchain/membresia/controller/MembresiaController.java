@@ -71,7 +71,7 @@ public class MembresiaController {
         return ResponseEntity.ok(membresiaService.obtenerPorCliente(clienteId));
     }
 
-    @Operation(summary = "OBTENER MEMBRESÍAS POR ESTADO", description = "Retorna membresías filtradas por estado (ACTIVA, INACTIVA, VENCIDA). Acceso: ADMIN, ENTRENADOR")
+    @Operation(summary = "OBTENER MEMBRESÍAS POR ESTADO", description = "Retorna membresías filtradas por estado (ACTIVA, VENCIDA, CANCELADA). Acceso: ADMIN, ENTRENADOR")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Lista obtenida exitosamente"),
             @ApiResponse(responseCode = "400", description = "Estado inválido")
