@@ -18,7 +18,7 @@ public class ClienteClient {
     private final WebClient.Builder webClientBuilder;
 
     @Value("${cliente.service.url}")
-    private String clienteServiceUrl;
+    private String clienteServiceUrl ;
 
     public ClienteDTO obtenerClientePorId(Long clienteId) {
         log.info("Consultando cliente con id {} en microservicio Cliente", clienteId);
