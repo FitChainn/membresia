@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Slf4j
 @Tag(name = "MEMBRESÍAS", description = "GESTIÓN DE MEMBRESÍAS")
 @RestController
 @RequestMapping("/v1/membresias")
@@ -43,6 +45,7 @@ public class MembresiaController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<EntityModel<MembresiaResponseDTO>> crear(@Valid @RequestBody MembresiaRequestDTO requestDTO) {
+        log.info("POST /v1/membresias - CREAR MEMBRESÍA clienteId={}", requestDTO.getClienteId());
         MembresiaResponseDTO creada = membresiaService.crear(requestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(assembler.toModel(creada));
     }
@@ -55,6 +58,7 @@ public class MembresiaController {
     @PreAuthorize("hasAnyRole('ADMIN', 'ENTRENADOR')")
     @GetMapping
     public ResponseEntity<CollectionModel<EntityModel<MembresiaResponseDTO>>> obtenerTodas() {
+        log.info("GET /v1/membresias - LISTAR TODAS");
         List<EntityModel<MembresiaResponseDTO>> membresias = membresiaService.obtenerTodas().stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
@@ -71,6 +75,7 @@ public class MembresiaController {
     @PreAuthorize("hasAnyRole('ADMIN', 'ENTRENADOR', 'CLIENTE')")
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<MembresiaResponseDTO>> obtenerPorId(@PathVariable Long id) {
+        log.info("GET /v1/membresias/{} - BUSCAR POR ID", id);
         return ResponseEntity.ok(assembler.toModel(membresiaService.obtenerPorId(id)));
     }
 
@@ -82,6 +87,7 @@ public class MembresiaController {
     @PreAuthorize("hasAnyRole('ADMIN', 'ENTRENADOR', 'CLIENTE')")
     @GetMapping("/cliente/{clienteId}")
     public ResponseEntity<CollectionModel<EntityModel<MembresiaResponseDTO>>> obtenerPorCliente(@PathVariable Long clienteId) {
+        log.info("GET /v1/membresias/cliente/{} - BUSCAR POR CLIENTE", clienteId);
         List<EntityModel<MembresiaResponseDTO>> membresias = membresiaService.obtenerPorCliente(clienteId).stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
@@ -98,6 +104,7 @@ public class MembresiaController {
     @PreAuthorize("hasAnyRole('ADMIN', 'ENTRENADOR')")
     @GetMapping("/estado/{estado}")
     public ResponseEntity<CollectionModel<EntityModel<MembresiaResponseDTO>>> obtenerPorEstado(@PathVariable EstadoMembresia estado) {
+        log.info("GET /v1/membresias/estado/{} - BUSCAR POR ESTADO", estado);
         List<EntityModel<MembresiaResponseDTO>> membresias = membresiaService.obtenerPorEstado(estado).stream()
                 .map(assembler::toModel)
                 .collect(Collectors.toList());
@@ -117,6 +124,7 @@ public class MembresiaController {
     public ResponseEntity<EntityModel<MembresiaResponseDTO>> actualizar(
             @PathVariable Long id,
             @Valid @RequestBody MembresiaRequestDTO requestDTO) {
+        log.info("PUT /v1/membresias/{} - ACTUALIZAR MEMBRESÍA", id);
         return ResponseEntity.ok(assembler.toModel(membresiaService.actualizar(id, requestDTO)));
     }
 
@@ -128,6 +136,7 @@ public class MembresiaController {
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+        log.info("DELETE /v1/membresias/{} - ELIMINAR MEMBRESÍA", id);
         membresiaService.eliminar(id);
         return ResponseEntity.noContent().build();
     }
