@@ -1,5 +1,6 @@
 package com.fitchain.membresia;
 
+import com.fitchain.membresia.assembler.MembresiaModelAssembler;
 import com.fitchain.membresia.config.SecurityConfig;
 import com.fitchain.membresia.controller.MembresiaController;
 import com.fitchain.membresia.dto.MembresiaRequestDTO;
@@ -30,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MembresiaController.class)
-@Import({SecurityConfig.class, RolHeaderFilter.class})
+@Import({SecurityConfig.class, RolHeaderFilter.class, MembresiaModelAssembler.class})
 public class MembresiaControllerTest {
 
     @Autowired
@@ -80,7 +81,7 @@ public class MembresiaControllerTest {
         mockMvc.perform(get("/v1/membresias")
                         .header("X-User-Rol", "ADMIN"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(1));
+                .andExpect(jsonPath("$._embedded.membresiaResponseDTOList.length()").value(1));
     }
 
     @Test
