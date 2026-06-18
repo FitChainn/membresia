@@ -51,7 +51,7 @@ public class MembresiaService {
     // ─── CRUD ──────────────────────────────────────────────────────────────────
 
     public MembresiaResponseDTO crear(MembresiaRequestDTO requestDTO) {
-        log.info("Creando membresía para clienteId {}", requestDTO.getClienteId());
+        log.info("CREANDO MEMBRESÍA PARA clienteId={}", requestDTO.getClienteId());
 
         ClienteDTO cliente = clienteClient.obtenerClientePorId(requestDTO.getClienteId());
 
@@ -64,26 +64,26 @@ public class MembresiaService {
         membresia.setEstado(EstadoMembresia.ACTIVA);
 
         Membresia guardada = membresiaRepository.save(membresia);
-        log.info("Membresía creada con id {}", guardada.getId());
+        log.info("MEMBRESÍA CREADA CON ID: {}", guardada.getId());
         return toResponseDTO(guardada, cliente);
     }
 
     public List<MembresiaResponseDTO> obtenerTodas() {
-        log.info("Obteniendo todas las membresías");
+        log.info("OBTENIENDO TODAS LAS MEMBRESÍAS");
         return membresiaRepository.findAll().stream()
                 .map(m -> toResponseDTO(m, clienteClient.obtenerClientePorId(m.getClienteId())))
                 .toList();
     }
 
     public MembresiaResponseDTO obtenerPorId(Long id) {
-        log.info("Buscando membresía con id {}", id);
+        log.info("BUSCANDO MEMBRESÍA CON ID: {}", id);
         Membresia membresia = membresiaRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Membresía con id " + id + " no encontrada"));
         return toResponseDTO(membresia, clienteClient.obtenerClientePorId(membresia.getClienteId()));
     }
 
     public List<MembresiaResponseDTO> obtenerPorCliente(Long clienteId) {
-        log.info("Buscando membresías del cliente {}", clienteId);
+        log.info("BUSCANDO MEMBRESÍAS DEL CLIENTE {}", clienteId);
         ClienteDTO cliente = clienteClient.obtenerClientePorId(clienteId);
         return membresiaRepository.findByClienteId(clienteId).stream()
                 .map(m -> toResponseDTO(m, cliente))
@@ -91,14 +91,14 @@ public class MembresiaService {
     }
 
     public List<MembresiaResponseDTO> obtenerPorEstado(EstadoMembresia estado) {
-        log.info("Buscando membresías con estado {}", estado);
+        log.info("BUSCANDO MEMBRESÍAS CON ESTADO {}", estado);
         return membresiaRepository.findByEstado(estado).stream()
                 .map(m -> toResponseDTO(m, clienteClient.obtenerClientePorId(m.getClienteId())))
                 .toList();
     }
 
     public MembresiaResponseDTO actualizar(Long id, MembresiaRequestDTO requestDTO) {
-        log.info("Actualizando membresía con id {}", id);
+        log.info("ACTUALIZANDO MEMBRESÍA CON ID: {}", id);
         Membresia membresia = membresiaRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Membresía con id " + id + " no encontrada"));
 
@@ -111,16 +111,16 @@ public class MembresiaService {
         membresia.setPrecio(requestDTO.getPrecio());
 
         Membresia actualizada = membresiaRepository.save(membresia);
-        log.info("Membresía {} actualizada correctamente", id);
+        log.info("MEMBRESÍA CON ID {} ACTUALIZADA CORRECTAMENTE", id);
         return toResponseDTO(actualizada, cliente);
     }
 
     public void eliminar(Long id) {
-        log.info("Eliminando membresía con id {}", id);
+        log.info("ELIMINANDO MEMBRESÍA CON ID: {}", id);
         if (!membresiaRepository.existsById(id)) {
             throw new NoSuchElementException("Membresía con id " + id + " no encontrada");
         }
         membresiaRepository.deleteById(id);
-        log.info("Membresía {} eliminada", id);
+        log.info("MEMBRESÍA CON ID {} ELIMINADA EXITOSAMENTE", id);
     }
 }
