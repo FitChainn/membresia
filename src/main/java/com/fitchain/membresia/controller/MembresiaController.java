@@ -135,9 +135,10 @@ public class MembresiaController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<MembresiaResponseDTO>> eliminar(@PathVariable Long id) {
         log.info("DELETE /v1/membresias/{} - ELIMINAR MEMBRESÍA", id);
+        MembresiaResponseDTO membresia = membresiaService.obtenerPorId(id);
         membresiaService.eliminar(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(assembler.toModel(membresia));
     }
 }
